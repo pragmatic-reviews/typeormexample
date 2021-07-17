@@ -26,11 +26,10 @@ createConnection().then(async connection => {
     const userRepository = connection.getRepository(User);
     //const users = await userRepository.find({ relations: ["profile"] });
 
-    const users = await connection
-    .getRepository(User)
-    .createQueryBuilder("user")
-    .leftJoinAndSelect("user.profile", "profile")
-    .getMany();
+    const users = await userRepository
+                    .createQueryBuilder("user")
+                    .leftJoinAndSelect("user.profile", "profile")
+                    .getMany();
 
     console.log("Loaded users: ", users);
 
