@@ -5,7 +5,7 @@ import {User} from "./entity/User";
 
 createConnection().then(async connection => {
 
-    console.log("Inserting a new user into the database...");
+    /*console.log("Inserting a new user into the database...");
     const user = new User();
     user.firstName = "Timber";
     user.lastName = "Saw";
@@ -20,11 +20,17 @@ createConnection().then(async connection => {
       await transactionalEntityManager.save(user);
       await transactionalEntityManager.save(profile);
     });
-
+*/
     console.log("Loading users from the database...");
 
     const userRepository = connection.getRepository(User);
-    const users = await userRepository.find({ relations: ["profile"] });
+    //const users = await userRepository.find({ relations: ["profile"] });
+
+    const users = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .leftJoinAndSelect("user.profile", "profile")
+    .getMany();
 
     console.log("Loaded users: ", users);
 
