@@ -33,4 +33,18 @@ createConnection().then(async connection => {
 
     console.log("Loaded users: ", users);
 
+
+    console.log("Loading profiles from the database...")
+
+    const profileRepository = connection.getRepository(Profile);
+    //const profiles = await profileRepository.find({ relations: ["user"] });
+
+    const profiles = await profileRepository
+                    .createQueryBuilder("profile")
+                    .leftJoinAndSelect("profile.user", "user")
+                    .getMany();
+    
+    console.log("Loaded profiles: ", profiles);
+
+
 }).catch(error => console.log(error));
