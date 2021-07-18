@@ -5,7 +5,7 @@ import {User} from "./entity/User";
 
 createConnection().then(async connection => {
 
-    /*console.log("Inserting a new user into the database...");
+    console.log("Inserting a new user into the database...");
     const user = new User();
     user.firstName = "Timber";
     user.lastName = "Saw";
@@ -14,16 +14,16 @@ createConnection().then(async connection => {
     const profile = new Profile();
     profile.gender = "M";
     profile.photo = "http://photos.google.com/images/1.png";
-    profile.user = user;
 
-    await connection.transaction(async transactionalEntityManager => {
-      await transactionalEntityManager.save(user);
-      await transactionalEntityManager.save(profile);
-    });
-*/
-    console.log("Loading users from the database...");
+    user.profile = profile;
 
     const userRepository = connection.getRepository(User);
+
+    await userRepository.save(user);
+
+
+    console.log("Loading users from the database...");
+
     //const users = await userRepository.find({ relations: ["profile"] });
 
     const users = await userRepository

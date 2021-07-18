@@ -16,7 +16,9 @@ export class User {
     @Column()
     age: number;
 
-    @OneToOne(() => Profile)
+    @OneToOne(() => Profile,  profile => profile.user, {
+      cascade: true
+    })
     @JoinColumn()
     profile: Profile;
 }
