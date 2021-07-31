@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
+import { Community } from "./entity/Community";
 import { Phone } from "./entity/Phone";
 import { Profile } from "./entity/Profile";
 import {User} from "./entity/User";
@@ -22,6 +23,15 @@ createConnection().then(async connection => {
     profile.photo = "http://photos.google.com/images/2.png";
 
     user.profile = profile;
+
+    const stackOverflow = new Community();
+    stackOverflow.name = "StackOverflow";
+
+    const github = new Community();
+    github.name = "GitHub";
+
+    user.addCommunity(stackOverflow);
+    user.addCommunity(github);
 
     const userRepository = connection.getRepository(User);
 
