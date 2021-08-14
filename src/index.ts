@@ -9,7 +9,7 @@ createConnection().then(async connection => {
     book.name = "Clean Code First Edition";
     book.title = "Clean Code";
     book.author = "Robert C. Martin";
-    book.price = 120;
+    book.price = 33;
 
     const pen = new Pen();
     pen.name = "Blue pen";

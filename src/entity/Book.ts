@@ -1,7 +1,7 @@
-import { Column, Entity } from "typeorm";
+import { ChildEntity, Column } from "typeorm";
 import { Product } from "./Product";
 
-@Entity()
+@ChildEntity()
 export class Book extends Product {
   @Column()
   author: string;

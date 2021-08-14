@@ -1,7 +1,7 @@
-import { Column, Entity } from "typeorm";
+import { ChildEntity, Column } from "typeorm";
 import { Product } from "./Product";
 
-@Entity()
+@ChildEntity()
 export class Pen extends Product {
   @Column()
   color: string;
