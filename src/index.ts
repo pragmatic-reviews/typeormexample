@@ -1,25 +1,23 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 import { Book } from "./entity/Book";
-import { Pen } from "./entity/Pen";
+import { Name } from "./entity/Name";
+import { Author } from "./entity/Author";
 
 createConnection().then(async connection => {
+    const name = new Name();
+    name.first = "Robert";
+    name.last = "Martin";
+
+    const author = new Author();
+    author.name = name;
 
     const book = new Book();
-    book.name = "Clean Code First Edition";
     book.title = "Clean Code";
-    book.author = "Robert C. Martin";
+    book.author = author;
     book.price = 33;
-
-    const pen = new Pen();
-    pen.name = "Blue pen";
-    pen.color = "blue";
-    pen.price = 2;
 
     const bookRepository = connection.getRepository(Book);
     await bookRepository.save(book);
-
-    const penRepository = connection.getRepository(Pen);
-    await penRepository.save(pen);
 
 }).catch(error => console.log(error));
