@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Audit } from "./Audit";
 import { Author } from "./Author";
 
 @Entity()
@@ -17,4 +18,7 @@ export class Book {
 
   @Column()
   price: number;
+
+  @Column(() => Audit)
+  audit: Audit;
 }
