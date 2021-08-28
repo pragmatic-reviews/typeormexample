@@ -1,43 +1,29 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 import { Phone } from "./entity/Phone";
-import { Profile } from "./entity/Profile";
 import {User} from "./entity/User";
 
 createConnection().then(async connection => {
 
-    console.log("Inserting a new user into the database...");
+    // Data Mapper
     const user = new User();
     user.firstName = "John";
     user.lastName = "Doe";
-    user.age = 26;
-
-    const phone = new Phone();
-    phone.phoneNumber = 12345678;
-
-    user.addPhone(phone);
-
-    const profile = new Profile();
-    profile.gender = "M";
-    profile.photo = "http://photos.google.com/images/2.png";
-
-    user.profile = profile;
 
     const userRepository = connection.getRepository(User);
-
     await userRepository.save(user);
 
-    const users = await userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.profile", "profile")
-      .leftJoinAndSelect("user.phones", "phones")
-      .getMany();
+    const users = await userRepository.find();
 
-    console.log("Loaded users: ", users);
-    
-    users.forEach(user => {
-      console.log("Phones: ", user.phones);
-    });
+    console.log("Users: ", users);
 
+    // Active Record
+    const phone = new Phone();
+    phone.phoneNumber = 12345678;
+    phone.save();
+
+    const phone1 = await Phone.findOne({ phoneNumber: 12345678 });
+
+    console.log("Phone: ", phone1);
 
 }).catch(error => console.log(error));
