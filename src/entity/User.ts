@@ -18,14 +18,7 @@ export class User {
 
     @OneToMany(() => Phone, phone => phone.user, {
       cascade: true,
-      eager: true
+      lazy: true
     })
-    phones: Phone[];
-
-    addPhone(phone: Phone) {
-      if(this.phones == null) {
-        this.phones = new Array<Phone>();
-      }
-      this.phones.push(phone);
-    }
+    phones: Promise<Phone[]>;
 }
