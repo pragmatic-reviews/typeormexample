@@ -5,7 +5,7 @@ import {User} from "./entity/User";
 
 createConnection().then(async connection => {
 
-    const user = new User();
+    /*const user = new User();
     user.firstName = "John";
     user.lastName = "Doe";
     user.age = 26;
@@ -13,21 +13,18 @@ createConnection().then(async connection => {
     const phone = new Phone();
     phone.phoneNumber = 12345678;
 
-    user.phones = Promise.resolve([phone]);
+    user.phones = Promise.resolve([phone]);*/
 
     const userRepository = connection.getRepository(User);
 
-    await userRepository.save(user);
+    //await userRepository.save(user);
 
     const users = await userRepository.find();
 
     console.log("Loaded users without phones: ", users);
 
-    const phones = await user.phones;
+    const phones = await users[0].phones;
     
-    users.forEach(user => {
-      console.log("Phones: ", phones );
-    });
-
+    console.log("Phones: ", phones );
 
 }).catch(error => console.log(error));
