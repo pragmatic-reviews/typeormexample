@@ -1,43 +1,50 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
+import { createConnection } from "typeorm";
 import { Phone } from "./entity/Phone";
-import { Profile } from "./entity/Profile";
-import {User} from "./entity/User";
+import { User } from "./entity/User";
 
 createConnection().then(async connection => {
 
-    console.log("Inserting a new user into the database...");
-    const user = new User();
-    user.firstName = "John";
-    user.lastName = "Doe";
-    user.age = 26;
+  // INSERT USER
+  await connection.createQueryBuilder()
+                  .insert()
+                  .into(User)
+                  .values([
+                    { firstName: "John", lastName: "Doe", age: 26 }
+                  ])
+                  .execute();
 
-    const phone = new Phone();
-    phone.phoneNumber = 12345678;
+  // SELECT SINGLE USER
+  const user = await connection.createQueryBuilder()
+                               .select("user")
+                               .from(User, "user")
+                               .where("user.id = :id", { id: 1 })
+                               .getOne();
+  
+  console.log("User from DB: ", user);
 
-    user.addPhone(phone);
+  // INSERT PHONE
+  await connection.createQueryBuilder()
+                  .insert()
+                  .into(Phone)
+                  .values([
+                    { phoneNumber: 12345678 }
+                  ])
+                  .execute();
+  
+  // INSERT RELATION PHONE AND USER                
+  await connection.createQueryBuilder()
+                  .relation(User, "phones")
+                  .of(user)
+                  .add({ id: 1});
 
-    const profile = new Profile();
-    profile.gender = "M";
-    profile.photo = "http://photos.google.com/images/2.png";
+  // SELECT USER LEFT JOIN PHONE
+  const users = await connection.createQueryBuilder()
+                                .select("user")
+                                .from(User, "user")
+                                .leftJoinAndSelect("user.phones", "phones")
+                                .getMany();
 
-    user.profile = profile;
-
-    const userRepository = connection.getRepository(User);
-
-    await userRepository.save(user);
-
-    const users = await userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.profile", "profile")
-      .leftJoinAndSelect("user.phones", "phones")
-      .getMany();
-
-    console.log("Loaded users: ", users);
-    
-    users.forEach(user => {
-      console.log("Phones: ", user.phones);
-    });
-
+  console.log("Users from DB: ", users);
 
 }).catch(error => console.log(error));
